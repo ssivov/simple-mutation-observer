@@ -74,4 +74,20 @@ describe(`No-op operations tests:`, (): void => {
 
     expectNoMutations().then(done);
   });
+
+  it(`Taking apart subtree and re-building it is no-op`, async (done: DoneFn): Promise<void> => {
+    setupHtml(`
+      <div id='c1'>
+        <div id='c2'></div>
+      </div>
+    `);
+    const c1 = getById('c1');
+    const c2 = getById('c2');
+    wormhole.removeChild(c1);
+    c1.removeChild(c2);
+    wormhole.appendChild(c1);
+    c1.appendChild(c2);
+
+    expectNoMutations().then(done);
+  });
 });

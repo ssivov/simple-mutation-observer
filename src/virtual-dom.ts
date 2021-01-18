@@ -67,8 +67,6 @@ class VirtualDom {
     this.vRoot = this.virtualizeDomTree(this.root);
   }
 
-  // TODO: Test case where 'affectedRoot' got removed to make sure those mutations are not recorded
-  // TODO: Test case where 'affectedRoot' is a child of a removed node to make sure those mutations are not recorded
   private handleMutations(mutations: MutationRecord[]): void {
 
     /* develblock:start */
@@ -191,7 +189,6 @@ class VirtualDom {
     return vNode;
   }
 
-  // TODO: Test when AFFECTED ROOT is removed from the DOM itself
   private markNodeAffected(node: Node): void {
     const nodeIndex = VirtualNode.getIndex(node);
     const vNode = this.getVirtualNode(node);
@@ -222,11 +219,6 @@ class VirtualDom {
     //    3. If nodeChildren[i] has been affected, then we need to insert matching vNode in vNodeChilden at position i
     //    4. If nodeChildren[i] is a new node, create a new vNode, add it in vNodeChildren at position i and mark it as an affected root
     //  Note: multiple affected/new nodes in a row can be inserted together as a range
-
-    // TODO: What if affected root is a new node itself??
-    // TODO: Test case where some node is tagged as affected root, but then its skip-parent gets disconnected.
-    // This affected root now has its index removed, but is still in affectedRoots Set. This would result in
-    // acquiring a null vNode in here.
     const vNode = this.getVirtualNode(node);
     if (vNode === null) {
       throw new Error('Expected node to have a matching vNode');
@@ -280,8 +272,8 @@ class VirtualDom {
     }
   }
 
-  // TODO: Mutation summary 'getOldPreviousSibling' fails for removed nodes
-  // TODO: Verify that all oldStates are in fact correct old states
+  // TODO: mutation-summary 'getOldPreviousSibling' fails for removed nodes
+  // TODO: Verify that all oldStates are correct
   private releaseVNode(vNode: VirtualNode): void {
     this.mutationBuffer.recordRemovedNode(vNode.node, this.nodeOldStates.get(vNode.index) as INodeState);
     this.attributesCache.delete(vNode.index);
