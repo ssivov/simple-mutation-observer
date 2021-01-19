@@ -63,15 +63,21 @@ class SimpleMutationBuffer {
         record.added.push(attr);
       } else if (!(element.hasAttribute(attr))) {
         record.removed.push(attr);
-      } else {
+      } else if (value !== element.getAttribute(attr)) {
         record.changed.push(attr);
+      } else {
+        record.all.pop();
       }
     });
-    this.mutation.attributes.push(record);
+    if (record.all.length > 0) {
+      this.mutation.attributes.push(record);
+    }
   }
 
-  public recordCharacterDataChange(node: Node, oldValue: string): void {
-    this.mutation.cdata.push({ node, oldValue });
+  public recordCharacterDataChange(node: CharacterData, oldValue: string): void {
+    if (oldValue !== node.data) {
+      this.mutation.cdata.push({ node, oldValue });
+    }
   }
 }
 

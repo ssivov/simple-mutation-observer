@@ -3,9 +3,13 @@ export type SimpleMutationCallback = (summary: ISimpleMutationRecord) => void;
 
 export interface ISimpleMutationObserverInit {
   attributes: boolean;
-  attributeOldValue: boolean;
   characterData: boolean;
-  characterDataOldValue: boolean;
+
+  // We need old values of attrs and cdata to identify add/remove operation correctly.
+  // At the current stage, if user enables attrs or cdata, we will enable old values automatically.
+  // TODO: Consider implementation independent of the 'oldValue' property in native MO callback
+  // attributeOldValue: boolean;
+  // characterDataOldValue: boolean;
 }
 
 export interface ISimpleMutationRecord {

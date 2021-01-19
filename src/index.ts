@@ -5,9 +5,7 @@ export default class SimpleMutationObserver {
 
   private readonly defaultOptions: ISimpleMutationObserverInit = {
     attributes: true,
-    attributeOldValue: false,
-    characterData: true,
-    characterDataOldValue: false,
+    characterData: true
   };
 
   private vDom: VirtualDom;
@@ -41,6 +39,7 @@ export default class SimpleMutationObserver {
         (mergedOptions as any)[key] = (this.defaultOptions as any)[key];
       }
     });
+
     return mergedOptions as ISimpleMutationObserverInit;
   }
 }

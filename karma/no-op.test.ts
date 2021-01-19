@@ -90,4 +90,27 @@ describe(`No-op operations tests:`, (): void => {
 
     expectNoMutations().then(done);
   });
+
+  it('Changing attribute to a different value and then back is no-op', async (done: DoneFn): Promise<void> => {
+    setupHtml(`
+      <div id='target' attr='old-val'></div>
+    `);
+    const target = getById('target');
+    target.setAttribute('attr', 'new-val');
+    target.setAttribute('attr', 'old-val');
+
+    expectNoMutations().then(done);
+  });
+
+  it('Changing cdata to a different value and then back is no-op', async (done: DoneFn): Promise<void> => {
+    setupHtml(`
+      <div id='target'>old-text</div>
+    `);
+    const target = getById('target') as HTMLDivElement;
+    const text = target.childNodes[0] as CharacterData;
+    text.data = 'new-text';
+    text.data = 'old-text';
+
+    expectNoMutations().then(done);
+  });
 });

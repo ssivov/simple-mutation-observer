@@ -43,9 +43,9 @@ class VirtualDom {
       childList: true,
       subtree: true,
       attributes: this.options.attributes,
-      attributeOldValue: this.options.attributeOldValue,
+      attributeOldValue: this.options.attributes, // Required for attributes to be reported correctly
       characterData: this.options.characterData,
-      characterDataOldValue: this.options.characterDataOldValue
+      characterDataOldValue: this.options.characterData // Required for cdata to be reported correctly
     });
     this.observing = true;
   }
@@ -80,7 +80,7 @@ class VirtualDom {
         case 'attributes':
           if (targetIndex >= 0) {
             const attrCache: Map<string, string | null> = this.attributesCache.get(targetIndex) || new Map();
-            const attrSeen = (mutation.attributeName as string) in attrCache;
+            const attrSeen = attrCache.has(mutation.attributeName as string);
             if (!attrSeen) {
               attrCache.set(mutation.attributeName as string, mutation.oldValue);
             }
@@ -89,7 +89,7 @@ class VirtualDom {
           break;
         case 'characterData':
           if (targetIndex >= 0) {
-            const nodeSeen = targetIndex in this.cDataCache;
+            const nodeSeen = this.cDataCache.has(targetIndex);
             if (!nodeSeen) {
               this.cDataCache.set(targetIndex, mutation.oldValue as string);
             }
@@ -166,7 +166,7 @@ class VirtualDom {
   private simplifyCharacterDataChanges(): void {
     this.cDataCache.forEach((cData: string, nodeIndex: number): void => {
       const node = (this.allVNodes.get(nodeIndex) as VirtualNode).node;
-      this.mutationBuffer.recordCharacterDataChange(node as Element, this.cDataCache.get(nodeIndex) as string);
+      this.mutationBuffer.recordCharacterDataChange(node as CharacterData, this.cDataCache.get(nodeIndex) as string);
     });
   }
 

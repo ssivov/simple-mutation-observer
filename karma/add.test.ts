@@ -15,7 +15,7 @@ describe(`'Add' mutations tests:`, (): void => {
   });
 
   it('Adding 1 new child creates 1 entry', async (): Promise<void> => {
-    const newNode = createElement({ parent: wormhole })
+    const newNode = createElement({ parent: wormhole });
     const simpleMutation = await getSimpleMutationObserver().getSimpleMutationRecord();
     expect(simpleMutation.added.length).toEqual(1);
     expect(simpleMutation.added[0].node).toEqual(newNode);
